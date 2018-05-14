@@ -4,6 +4,7 @@
 
 
 typedef struct _word {
+	int fist;
 	int tipe;
 	int id;	
 	char content[255];
@@ -28,6 +29,7 @@ word* create_word(char content[255], word* NEXT){
 	word *new_word = (word*) malloc (sizeof(word));
 	new_word->tipe = 0;
 	new_word->id = 0;
+	new_word->fist = 0;
 	new_word->NEXT = NEXT;
 	strcpy(new_word->content,content);
 	return new_word;
@@ -66,10 +68,13 @@ char* getword(int cont, char string[1024]){
 	return strin;
 }
 
-word* setword(int jumps, char string[1024]){
+word* setword(int jumps, char string[1024],int Limit){
 	word* new_word = NULL;
-	if(jumps >= 0){
-		new_word = create_word(getword(jumps,string),setword(jumps-1,string));
+	if(jumps < Limit){
+		new_word = create_word(getword(jumps,string),setword(jumps+1,string,Limit));
+		if(jumps == 0){
+			new_word->fist = 1;
+		}
 	}
 	return new_word;
 }
@@ -77,14 +82,16 @@ word* setword(int jumps, char string[1024]){
 //Retorna um array de strings com as palavras de cada linha; 
 void getwords(char string[1024], line* line){
 	line->wordCont = charcont(string,' ');
-	line->words = setword(line->wordCont,string);
+	line->words = setword(0,string,line->wordCont);
 }
 
 void wordContent(word* words){
 	if(words != NULL){
-		wordContent(words->NEXT);
+		if(words->fist){
+				printf("->");
+		}
 		printf("[%s](%d)",words->content,words->tipe);
-		
+		wordContent(words->NEXT);	
 	}else{
 		printf("\n");
 	}
@@ -153,14 +160,12 @@ void preprocess(FILE *inputFile){
 			if(c == ','){
 				fprintf(outputFile, "%s", " , ");
 			}else{
-				if(c == '\n'){
-					fprintf(outputFile, "%s", " \n");
-				}else{
-					fprintf(outputFile, "%c" , c);	
+				if(c == '\n' || c == ':'){
+						fprintf(outputFile, " ");
 				}
+				fprintf(outputFile, "%c" , c);	
 			}
-		}
-			
+		}	
 	}	
 	fclose(outputFile);
 	inputFile = fopen("02notabspace.txt", "r");

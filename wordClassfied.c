@@ -130,12 +130,14 @@ int checkFile(char *word, char *NameFile){
 		while(!feof(fi)){
 			cont++;
 			fgets(str,255,fi);
-			str[strlen(str)-1] = '\0';
-			//printf ("checking if: [%s] == [%s] = %d \n",str,wordx,strcmp(str,word));
-			if(strcmp(str,wordx)==0 ){
-				fclose(fi);
-				return cont;
-			}		
+			if(str[0] != ';'){
+				str[strlen(str)-1] = '\0';
+				//printf ("checking if: [%s] == [%s] = %d \n",str,wordx,strcmp(str,word));
+				if(strcmp(str,wordx)==0 ){
+					fclose(fi);
+					return cont;
+				}
+			}
 		}
 		//system("pause");
 		fclose(fi);
@@ -158,6 +160,21 @@ int reservedInst(char *word){
 	return checkFile(word,"instrucoesreservadas.txt");
 }
 
+int isIdentification(char* word){
+	if(word != NULL){
+		if(isAlphas(word[0])){
+			int x = 1;
+			while(word[x] != '\0'){
+				if(!isDigits(word[x]) && !isAlphas(word[x])){
+					return 0;
+				}
+				x++;
+			}
+			return 1;
+		}
+	}
+	return 0;
+}
 
 int isLiteral(char *word){
 	if(isNums(word) || isHexs(word)|| isDec(word) || isBin(word)){
@@ -166,24 +183,22 @@ int isLiteral(char *word){
 	return 0;
 }
 
-int isLabel(char *word){
-	if(word != NULL){
-		if(isAlphas(word[0])){
-			int x = 1;
-			while(word[x] != '\0'){
-				if(!isDigits(word[x]) && !isAlphas(word[x]) && word[x] != ':'){
-					return 0;
-				}
-				x++;
-			}
-			if(word[strlen(word)-1] == ':'){
-				return 1;
-			}
+/*
+int isLabel(word *word){
+	
+	
+	
+	if()
+		char* words= word->content;
+		if(isIdentification(words){
+			if(word->NEXT != )
+			->tipe == 7){
+			return 1;
 		}
-	}
 	return 0;
 }
 
+*/
 int isSeparate(char *words){
 	if((strlen(words)==1) && ((words[0] == ',') || (words[0] == '&'))){
 		return 1;
@@ -191,15 +206,23 @@ int isSeparate(char *words){
 	return 0;
 }
 
-int dbLabel(char *words){
-	if(isLabel(words)){
-		return 8;
+int isDescLabel(char *words){
+	if((strlen(words)==1) && (words[0] == ':')){
+		return 1;
+	}
+	return 0;
+}
+
+/*
+int dbLabel(word *words){
+	char* words = word->content;
+	checkFile()
 	}else{
 		return -1;
 	}
 }
 
-
+*/
 int wordClassified(word* words){
 	if(words != NULL){
 		if(strlen(words->content)==0){
@@ -210,37 +233,49 @@ int wordClassified(word* words){
 				words->tipe = 6;
 				return 1;
 			}else{
-				if(isLiteral(words->content)){
-					words->tipe =  4;
-					return 1;
+				if(isDescLabel(words->content)){
+					words->tipe = 7;
+				return 1;
 				}else{
-					int id = configAmbiente(words->content);
-					if(id >0){
-						words->tipe =  1;
-						words->id = id;
+					if(isLiteral(words->content)){
+						words->tipe =  4;
 						return 1;
 					}else{
-						id = reservedRegis(words->content);
+						int id = configAmbiente(words->content);
 						if(id >0){
-							words->tipe =  3;
+							words->tipe =  1;
 							words->id = id;
 							return 1;
 						}else{
-							id = reservedInst(words->content);
+							id = reservedRegis(words->content);
 							if(id >0){
-								words->tipe =  2;
+								words->tipe =  3;
 								words->id = id;
 								return 1;
 							}else{
-								id = dbLabel(words->content);
-								if(id >=0){
-									words->tipe =  5;
+								id = reservedInst(words->content);
+								if(id >0){
+									words->tipe =  2;
 									words->id = id;
 									return 1;
 								}else{
-									//printf("nao foi possivel identificar: [%s] !\n",words->content);
-									//system("pause");
-									return 0;
+									//id = dbLabel(words);
+									if(isIdentification(words->content)){
+										words->tipe =  5;
+										if(words->fist){
+											if(words->NEXT != NULL){
+												char * teste = words->NEXT->content;
+												if(teste[0] == ':'){
+													words->tipe =  8;	
+												}
+											}
+										}
+										return 1;
+									}else{
+										//printf("nao foi possivel identificar: [%s] !\n",words->content);
+										//system("pause");
+										return 0;
+									}
 								}
 							}
 						}

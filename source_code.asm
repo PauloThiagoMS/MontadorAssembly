@@ -9,14 +9,6 @@ list p=16f819
 ; BotÃ£o
 	#define		Button	PORTA,RA0
 	
-;Reset
- org  H'0000'
- goto inicio
-
-;InterrupÃ§Ãµes
- org	H'0004'
- retfie
-
 inicio:
   
 ; Variavel Contadora
@@ -173,6 +165,14 @@ Print10:
 	movwf		Cont        ;Voltando ao valor inicial
 	call 		Print0      ;chama subrotina de impresao
 	return                      ;Retorno do chamado
+	
+;Reset
+ org  H'0000'
+ goto inicio
 
-;Fim	
+;InterrupÃ§Ãµes
+ org	H'0004'
+ retfie
+
+ ;Fim	
 	end                         ;Fim da execuÃ§Ã£o
