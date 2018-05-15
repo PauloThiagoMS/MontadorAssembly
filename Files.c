@@ -13,6 +13,8 @@ typedef struct _word {
 
 //
 typedef struct _line {
+	int tipe;
+	int lineCont;
 	int wordCont;
 	word* words;
 	struct _line* NEXT;
@@ -22,6 +24,9 @@ typedef struct _line {
 line* create_line( line* NEXT){
 	line *new_line = (line*) malloc (sizeof(line));
 	new_line->NEXT = NEXT;
+	new_line->lineCont = 0;
+	new_line->tipe = 0;
+	new_line->wordCont = 0;
 	return new_line;
 }
 
@@ -101,19 +106,21 @@ void wordContent(word* words){
 void printLine(line* line){
 	if(line != NULL){
 		wordContent(line->words);
+		printf("%3d",line->lineCont);
 		printLine(line->NEXT);
 	}
 }
 
 //Le todas as linhas do arquivo
-line* ReadLine(line* LastLine,FILE* Finput){
+line* ReadLine(line* LastLine,FILE* Finput,int lineConts){
 	line* new_line = NULL;
 	if(!feof(Finput)){
 		char string[1024];
 		fgets(string,1024,Finput);
 		string[strlen(string)-1] = '\0';
-		new_line = create_line(ReadLine(new_line,Finput));
+		new_line = create_line(ReadLine(new_line,Finput,lineConts+1));
 		getwords(string,new_line);
+		new_line->lineCont = lineConts;
 	}
 	return new_line;
 }
@@ -125,7 +132,7 @@ line* ReadFile(FILE* Finput){
 		return NULL;
 	}else{
 		line* new_line;
-		new_line = ReadLine(new_line,Finput);
+		new_line = ReadLine(new_line,Finput,0);
 		return new_line;
 	}
 }

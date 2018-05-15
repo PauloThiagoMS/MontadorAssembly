@@ -1,14 +1,12 @@
 tipos de linhas
-0 Nulas
-1 Configuração de ambiente
-2 comando
-3 Label + comando
+0 Nao Computadas		(nulas ou Configuração de ambiente)
+1 Computadas	 	(Label's e/ou comandos)
 
 tipo de palavra
 0 Nulas
 1 Configuração de ambiente
 2 instrução reservada
-3 registradorreservado
+3 registrador reservado
 4 Literal
 5 Identificador
 6 separador de operadores
@@ -16,11 +14,3 @@ tipo de palavra
 8 Label
 
 
-
-instruções reservadas
-01<= c < 21 instrução com 0 operadores
-21<= c < 40 instrução com 1 operadores f
-41<= c < 60 instrução com 1 operadores k
-61<= c < 80 instrução com 2 operadores f,d
-81<= c < 100 instrução com 2 operadores f,b
-21<= c < 40 instrução com 1 operadores f

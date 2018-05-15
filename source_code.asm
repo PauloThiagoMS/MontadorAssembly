@@ -77,7 +77,7 @@ Print:
 	movlw		D'4'        ;Valor de referencia
 	subwf		Cont,w      ;SubtraÃ§Ã£o comparativa
 	btfsc		STATUS,2    ;VerificaÃ§Ã£o da comparaÃ§Ã£o
-	call 		Print4      ;ImpreÃ§Ã£o no display 7seg
+	call 		      ;ImpreÃ§Ã£o no display 7seg
 
 	movlw		D'5'        ;Valor de referencia
 	subwf		Cont,w      ;SubtraÃ§Ã£o comparativa

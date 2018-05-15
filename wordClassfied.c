@@ -92,10 +92,10 @@ int isBin(char *word){
 		if(*c != '\'')
 			return 0;
 		c++;
-		if(*c != '\0')
-			return 0;
+		if(*c == '\0')
+			return 1;
 	}
-	return 1;
+	return 0;
 }
 
 int isDec(char *word){
@@ -132,14 +132,12 @@ int checkFile(char *word, char *NameFile){
 			fgets(str,255,fi);
 			if(str[0] != ';'){
 				str[strlen(str)-1] = '\0';
-				//printf ("checking if: [%s] == [%s] = %d \n",str,wordx,strcmp(str,word));
 				if(strcmp(str,wordx)==0 ){
 					fclose(fi);
 					return cont;
 				}
 			}
 		}
-		//system("pause");
 		fclose(fi);
 		return 0;
 	}else{
@@ -183,24 +181,23 @@ int isLiteral(char *word){
 	return 0;
 }
 
-/*
-int isLabel(word *word){
-	
-	
-	
-	if()
-		char* words= word->content;
-		if(isIdentification(words){
-			if(word->NEXT != )
-			->tipe == 7){
-			return 1;
+
+int isLabel(word *word){	
+	if(word->fist){
+		if(word->NEXT != NULL){
+			char * teste = word->NEXT->content;
+			if(teste[0] == ':'){
+				//id = dbLabel(word);
+				//words->tipe =  8;	
+			}
 		}
+	}
 	return 0;
 }
 
-*/
+
 int isSeparate(char *words){
-	if((strlen(words)==1) && ((words[0] == ',') || (words[0] == '&'))){
+	if((strlen(words)==1) && ((words[0] == ',') )){
 		return 1;
 	}
 	return 0;
@@ -213,16 +210,14 @@ int isDescLabel(char *words){
 	return 0;
 }
 
-/*
 int dbLabel(word *words){
-	char* words = word->content;
-	checkFile()
-	}else{
+	//char* words = word->content;
+	//checkFile()
+	//}else{
 		return -1;
-	}
+//	}
 }
 
-*/
 int wordClassified(word* words){
 	if(words != NULL){
 		if(strlen(words->content)==0){
@@ -259,17 +254,8 @@ int wordClassified(word* words){
 									words->id = id;
 									return 1;
 								}else{
-									//id = dbLabel(words);
 									if(isIdentification(words->content)){
 										words->tipe =  5;
-										if(words->fist){
-											if(words->NEXT != NULL){
-												char * teste = words->NEXT->content;
-												if(teste[0] == ':'){
-													words->tipe =  8;	
-												}
-											}
-										}
 										return 1;
 									}else{
 										//printf("nao foi possivel identificar: [%s] !\n",words->content);
@@ -294,9 +280,4 @@ void wordsClassied(word* words){
 	}
 } 
 
-void lineClassified(line* lines){
-	if(lines != NULL){
-		wordsClassied(lines->words);
-		lineClassified(lines->NEXT);
-	}
-}
+

@@ -27,7 +27,7 @@ ORG
 RETLW
 SUBLW
 XORLW
-
+CBLOCK
 
 
 
@@ -40,11 +40,31 @@ XORLW
 
 ;Instruções com um operador(Registrador)
 BANKSEL
-CALL
-CBLOCK
 CLRF
-GOTO
 MOVWF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;Instruções com um operador(identificador)
+GOTO
+CALL
+
+
+
+
 
 
 
@@ -83,3 +103,17 @@ BCF
 BSF
 BTFSC
 BTFSS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
