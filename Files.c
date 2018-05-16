@@ -4,6 +4,7 @@
 
 
 typedef struct _word {
+	int fist;
 	int tipe;
 	int id;	
 	char content[255];
@@ -12,6 +13,8 @@ typedef struct _word {
 
 //
 typedef struct _line {
+	int tipe;
+	int lineCont;
 	int wordCont;
 	word* words;
 	struct _line* NEXT;
@@ -21,6 +24,9 @@ typedef struct _line {
 line* create_line( line* NEXT){
 	line *new_line = (line*) malloc (sizeof(line));
 	new_line->NEXT = NEXT;
+	new_line->lineCont = 0;
+	new_line->tipe = 0;
+	new_line->wordCont = 0;
 	return new_line;
 }
 
@@ -28,6 +34,7 @@ word* create_word(char content[255], word* NEXT){
 	word *new_word = (word*) malloc (sizeof(word));
 	new_word->tipe = 0;
 	new_word->id = 0;
+	new_word->fist = 0;
 	new_word->NEXT = NEXT;
 	strcpy(new_word->content,content);
 	return new_word;
@@ -66,10 +73,13 @@ char* getword(int cont, char string[1024]){
 	return strin;
 }
 
-word* setword(int jumps, char string[1024]){
+word* setword(int jumps, char string[1024],int Limit){
 	word* new_word = NULL;
-	if(jumps >= 0){
-		new_word = create_word(getword(jumps,string),setword(jumps-1,string));
+	if(jumps < Limit){
+		new_word = create_word(getword(jumps,string),setword(jumps+1,string,Limit));
+		if(jumps == 0){
+			new_word->fist = 1;
+		}
 	}
 	return new_word;
 }
@@ -77,14 +87,16 @@ word* setword(int jumps, char string[1024]){
 //Retorna um array de strings com as palavras de cada linha; 
 void getwords(char string[1024], line* line){
 	line->wordCont = charcont(string,' ');
-	line->words = setword(line->wordCont,string);
+	line->words = setword(0,string,line->wordCont);
 }
 
 void wordContent(word* words){
 	if(words != NULL){
-		wordContent(words->NEXT);
+		if(words->fist){
+				printf("->");
+		}
 		printf("[%s](%d)",words->content,words->tipe);
-		
+		wordContent(words->NEXT);	
 	}else{
 		printf("\n");
 	}
@@ -93,20 +105,22 @@ void wordContent(word* words){
 
 void printLine(line* line){
 	if(line != NULL){
+		printf("%3d",line->lineCont);
 		wordContent(line->words);
 		printLine(line->NEXT);
 	}
 }
 
 //Le todas as linhas do arquivo
-line* ReadLine(line* LastLine,FILE* Finput){
+line* ReadLine(line* LastLine,FILE* Finput,int lineConts){
 	line* new_line = NULL;
 	if(!feof(Finput)){
 		char string[1024];
 		fgets(string,1024,Finput);
 		string[strlen(string)-1] = '\0';
-		new_line = create_line(ReadLine(new_line,Finput));
+		new_line = create_line(ReadLine(new_line,Finput,lineConts+1));
 		getwords(string,new_line);
+		new_line->lineCont = lineConts;
 	}
 	return new_line;
 }
@@ -118,7 +132,7 @@ line* ReadFile(FILE* Finput){
 		return NULL;
 	}else{
 		line* new_line;
-		new_line = ReadLine(new_line,Finput);
+		new_line = ReadLine(new_line,Finput,1);
 		return new_line;
 	}
 }
@@ -138,9 +152,10 @@ void preprocess(FILE *inputFile){
 				c = fgetc(inputFile);
 			}
 			fprintf(outputFile, "%c" , c);
-		}
-		if(c>0){
-			fprintf(outputFile, "%c" , c);	
+		}else{
+			if(c>0){
+				fprintf(outputFile, "%c" , c);	
+			}
 		}
 	}
 	fclose(outputFile);
@@ -153,14 +168,12 @@ void preprocess(FILE *inputFile){
 			if(c == ','){
 				fprintf(outputFile, "%s", " , ");
 			}else{
-				if(c == '\n'){
-					fprintf(outputFile, "%s", " \n");
-				}else{
-					fprintf(outputFile, "%c" , c);	
+				if(c == '\n' || c == ':'){
+						fprintf(outputFile, " ");
 				}
+				fprintf(outputFile, "%c" , c);	
 			}
-		}
-			
+		}	
 	}	
 	fclose(outputFile);
 	inputFile = fopen("02notabspace.txt", "r");

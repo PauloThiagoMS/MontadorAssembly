@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Files.c"
+int cblocks = 0;
 
 
 int isDigits(char c){
@@ -92,10 +93,10 @@ int isBin(char *word){
 		if(*c != '\'')
 			return 0;
 		c++;
-		if(*c != '\0')
-			return 0;
+		if(*c == '\0')
+			return 1;
 	}
-	return 1;
+	return 0;
 }
 
 int isDec(char *word){
@@ -130,14 +131,14 @@ int checkFile(char *word, char *NameFile){
 		while(!feof(fi)){
 			cont++;
 			fgets(str,255,fi);
-			str[strlen(str)-1] = '\0';
-			//printf ("checking if: [%s] == [%s] = %d \n",str,wordx,strcmp(str,word));
-			if(strcmp(str,wordx)==0 ){
-				fclose(fi);
-				return cont;
-			}		
+			if(str[0] != ';'){
+				str[strlen(str)-1] = '\0';
+				if(strcmp(str,wordx)==0 ){
+					fclose(fi);
+					return cont;
+				}
+			}
 		}
-		//system("pause");
 		fclose(fi);
 		return 0;
 	}else{
@@ -151,13 +152,28 @@ int configAmbiente(char *word){
 }
 
 int reservedRegis(char *word){
-	return checkFile(word,"registradoresreservados.txt");
+	return checkFile(word,"registradores.txt");
 }
 
 int reservedInst(char *word){
 	return checkFile(word,"instrucoesreservadas.txt");
 }
 
+int isIdentification(char* word){
+	if(word != NULL){
+		if(isAlphas(word[0])){
+			int x = 1;
+			while(word[x] != '\0'){
+				if(!isDigits(word[x]) && !isAlphas(word[x])){
+					return 0;
+				}
+				x++;
+			}
+			return 1;
+		}
+	}
+	return 0;
+}
 
 int isLiteral(char *word){
 	if(isNums(word) || isHexs(word)|| isDec(word) || isBin(word)){
@@ -166,39 +182,49 @@ int isLiteral(char *word){
 	return 0;
 }
 
-int isLabel(char *word){
-	if(word != NULL){
-		if(isAlphas(word[0])){
-			int x = 1;
-			while(word[x] != '\0'){
-				if(!isDigits(word[x]) && !isAlphas(word[x]) && word[x] != ':'){
-					return 0;
-				}
-				x++;
-			}
-			if(word[strlen(word)-1] == ':'){
+
+
+int isSeparate(char *words){
+	if((strlen(words)==1) && ((words[0] == ',') )){
+		return 1;
+	}
+	return 0;
+}
+
+int isDescLabel(char *words){
+	if((strlen(words)==1) && (words[0] == ':')){
+		return 1;
+	}
+	return 0;
+}
+
+int isLabel(word *word){	
+	if(word->fist){
+		if(word->NEXT != NULL){
+			char * teste = word->NEXT->content;
+			if(isDescLabel(teste)){
 				return 1;
+			}else{
+				
 			}
 		}
 	}
 	return 0;
 }
 
-int isSeparate(char *words){
-	if((strlen(words)==1) && ((words[0] == ',') || (words[0] == '&'))){
-		return 1;
-	}
-	return 0;
+void dbLabel(word *words){
+	
 }
 
-int dbLabel(char *words){
-	if(isLabel(words)){
-		return 8;
-	}else{
-		return -1;
+void ident2Register(word* words){
+	if(cblocks){
+		words->tipe =  3;
+		char *str = strupr(words->content);
+		char str2[255] = "";
+		sprintf(str2,"echo %s >>registradores.txt",str);
+		system(str2);
 	}
 }
-
 
 int wordClassified(word* words){
 	if(words != NULL){
@@ -210,37 +236,47 @@ int wordClassified(word* words){
 				words->tipe = 6;
 				return 1;
 			}else{
-				if(isLiteral(words->content)){
-					words->tipe =  4;
-					return 1;
+				if(isDescLabel(words->content)){
+					words->tipe = 7;
+				return 1;
 				}else{
-					int id = configAmbiente(words->content);
-					if(id >0){
-						words->tipe =  1;
-						words->id = id;
+					if(isLiteral(words->content)){
+						words->tipe =  4;
 						return 1;
 					}else{
-						id = reservedRegis(words->content);
+						int id = configAmbiente(words->content);
 						if(id >0){
-							words->tipe =  3;
+							words->tipe =  1;
 							words->id = id;
 							return 1;
 						}else{
-							id = reservedInst(words->content);
+							id = reservedRegis(words->content);
 							if(id >0){
-								words->tipe =  2;
+								words->tipe =  3;
 								words->id = id;
 								return 1;
 							}else{
-								id = dbLabel(words->content);
-								if(id >=0){
-									words->tipe =  5;
+								id = reservedInst(words->content);
+								if(id >0){
+									words->tipe =  2;
 									words->id = id;
+									if(id == 30){
+										cblocks = 1;	
+									}
+									if(id == 5){
+										cblocks = 0;	
+									}
 									return 1;
 								}else{
-									//printf("nao foi possivel identificar: [%s] !\n",words->content);
-									//system("pause");
-									return 0;
+									if(isIdentification(words->content)){
+										words->tipe =  5;
+										ident2Register(words);	
+										return 1;
+									}else{
+										//printf("nao foi possivel identificar: [%s] !\n",words->content);
+										//system("pause");
+										return 0;
+									}
 								}
 							}
 						}
@@ -259,9 +295,4 @@ void wordsClassied(word* words){
 	}
 } 
 
-void lineClassified(line* lines){
-	if(lines != NULL){
-		wordsClassied(lines->words);
-		lineClassified(lines->NEXT);
-	}
-}
+
