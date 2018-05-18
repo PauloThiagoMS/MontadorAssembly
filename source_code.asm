@@ -21,6 +21,7 @@ inicio:
 ; Variavel Contadora
 	cblock 0x20         ;Determina o endereco
 	Cont                ;Determina o nome
+	Cont2
 	Endc                ;Fim da declaracao
 	movlw H'1'          ;Seta 0 em W
 	movwf Cont          ;Copia de W para Cont

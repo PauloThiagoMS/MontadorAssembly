@@ -9,10 +9,12 @@ int main(){
 		printf("Erro ao abrir o arquivo!");
 		exit(1);
 	}else{
+		system("del registradores.txt");
+		system("copy registradoresReservados.txt registradores.txt");
 		printf("preprocessamento...");
 		preprocess(pFile);
 		fclose(pFile);
-		pFile = fopen("03subst.txt", "r");
+		pFile = fopen("source_code-posprocess.asm", "r");
 		printf(" ok\n");
 		line* File = ReadFile(pFile);
 		linesClassified(File);
@@ -20,6 +22,7 @@ int main(){
 		printLine(File);
 		
 		//system("start 03subst.csv");
+		system("pause");
 		return 0;
 	}
 	return 0;

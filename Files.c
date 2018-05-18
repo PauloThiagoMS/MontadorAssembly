@@ -158,6 +158,7 @@ void preprocess(FILE *inputFile){
 			}
 		}
 	}
+	fclose(inputFile);
 	fclose(outputFile);
 	inputFile = fopen("01nocoment.txt", "r");
 	outputFile = fopen("02notabspace.txt", "w");
@@ -174,10 +175,12 @@ void preprocess(FILE *inputFile){
 				fprintf(outputFile, "%c" , c);	
 			}
 		}	
-	}	
+	}
+	fclose(inputFile);	
 	fclose(outputFile);
 	inputFile = fopen("02notabspace.txt", "r");
-	outputFile = fopen("03subst.txt", "w");
+	system("del /f /q source_code-posprocess.asm");
+	outputFile = fopen("source_code-posprocess.asm", "w");
 		
 	while(!feof(inputFile)){					
 		c = fgetc(inputFile);							
@@ -193,7 +196,15 @@ void preprocess(FILE *inputFile){
 				}
 		}
 	}
-			 	
+	
+	fclose(inputFile);
+	fclose(outputFile);
+	
+	system("del /f /q 01nocoment.txt");
+	system("del /f /q 02notabspace.txt");
+
+	//system("pause");
+		 	
 	//return outputFile;
 	fclose(outputFile);
 }
