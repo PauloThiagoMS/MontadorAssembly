@@ -1,3 +1,14 @@
+;;;;;;Erros Possiveis;;;;;;;;;
+
+;Declaração de Label sem (:)
+Printxy ;
+
+
+
+
+
+
+
 ;ConfiguraÃ§Ãµes do ambiente do compilador
 list p=16f819
 	#include <p16f819.inc>
@@ -7,7 +18,7 @@ list p=16f819
 
 ;;;;;;;Inicio do codigo fonte;;;;;; 
 ;Reset
- org  H'0000'
+ org  H'0'
  goto inicio
 
 ;InterrupÃ§Ãµes
@@ -21,7 +32,6 @@ inicio:
 ; Variavel Contadora
 	cblock 0x20         ;Determina o endereco
 	Cont                ;Determina o nome
-	Cont2
 	Endc                ;Fim da declaracao
 	movlw H'1'          ;Seta 0 em W
 	movwf Cont          ;Copia de W para Cont
@@ -177,3 +187,9 @@ Print10:
 
  ;Fim	
 	end                         ;Fim da execuÃ§Ã£o
+
+	
+	
+
+
+

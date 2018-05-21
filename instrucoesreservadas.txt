@@ -1,4 +1,4 @@
-;Instruções sem operagores
+﻿;Instruções sem operagores
 CLRW
 CLRWDT
 END
@@ -42,8 +42,8 @@ CBLOCK
 BANKSEL
 CLRF
 MOVWF
-
-
+DECF
+INCF
 
 
 
@@ -82,9 +82,7 @@ CALL
 ADDWF
 ANDWF
 COMF
-DECF
 DECFSZ
-INCF
 INCFSZ
 IORWF
 MOVF
@@ -93,6 +91,8 @@ RRF
 SUBWF
 SWAPF
 XORWF
+
+
 
 
 

@@ -111,6 +111,13 @@ void printLine(line* line){
 	}
 }
 
+void printLine1(line* line){
+	if(line != NULL){
+		printf("%3d",line->lineCont);
+		wordContent(line->words);
+	}
+}
+
 //Le todas as linhas do arquivo
 line* ReadLine(line* LastLine,FILE* Finput,int lineConts){
 	line* new_line = NULL;

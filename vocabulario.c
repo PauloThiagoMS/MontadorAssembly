@@ -62,32 +62,34 @@ int isNums(char *word){
 }
 
 int isHexs(char *word){
-	char *c = word;
-	if(*c == 'H')
+	char *c = word;	
+	if(*c == 'H'){
 		c++;
-	if(*c == '\''){
-		do{
-			c++;
-		} while(isDigit(*c));
-		if(*c != '\'')
-			return 0;
-		c++;
-		if(*c != '\0')
-			return 0;
-		return 1;
+		if(*c == '\''){
+			do{
+				c++;
+			} while(isDigit(*c) || isAlphaHex(*c));
+			if(*c == '\''){
+				c++;
+				if(*c == '\0'){
+					return 1;
+				}
+			}
+		}
+		return 0;
 	}
-	else if(*c != '0')
-		return 0;
-	c++;
-	if(*c != 'X')
-		return 0;
-	do{
+	else if(*c == '0'){
 		c++;
-	} while(isDigit(*c) || isAlphaHex(*c));
-	if(*c != '\0')
-		return 0; 
-	
-	return 1;
+		if(*c == 'X'){
+			do{
+				c++;
+			} while(isDigit(*c) || isAlphaHex(*c));
+			if(*c == '\0'){
+				return 1; 
+			}
+		}
+	}
+	return 0;
 }
 
 int isBin(char *word){

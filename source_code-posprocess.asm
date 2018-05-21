@@ -1,4 +1,15 @@
  
+ 
+ 
+Printxy 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 list p=16f819 
  #include <p16f819.inc> 
  
@@ -7,7 +18,7 @@ list p=16f819
  
  
  
- org H'0000' 
+ org H'0' 
  goto inicio 
  
  
@@ -21,7 +32,6 @@ inicio :
  
  cblock 0x20 
  Cont 
- Cont2 
  Endc 
  movlw H'1' 
  movwf Cont 
@@ -177,3 +187,9 @@ Print10 :
  
  
  end 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -39,7 +39,6 @@ int isNumeric(char c){
 }
 
 
-
 int isNums(char *word){
 	char *c = word;	
 	while(*c != '\0'){
@@ -117,8 +116,6 @@ int isDec(char *word){
 	return 1;
 }
 
-
-
 int checkFile(char *word, char *NameFile){
 	FILE* fi;
 	fi = fopen(NameFile,"r");
@@ -183,7 +180,6 @@ int isLiteral(char *word){
 }
 
 
-
 int isSeparate(char *words){
 	if((strlen(words)==1) && ((words[0] == ',') )){
 		return 1;
@@ -216,13 +212,18 @@ void dbLabel(word *words){
 	
 }
 
-void ident2Register(word* words){
+int ident2Register(word* words){
 	if(cblocks){
 		words->tipe =  3;
 		char *str = strupr(words->content);
+		FILE* regs = fopen("registradores.txt", "rw");
 		char str2[255] = "";
 		sprintf(str2,"echo %s >>registradores.txt",str);
 		system(str2);
+	
+		return 1;
+	}else{
+		return 0;
 	}
 }
 
