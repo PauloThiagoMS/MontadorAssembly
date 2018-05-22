@@ -1,11 +1,19 @@
-tipos de linhas
-0 Nao Computadas		(nulas ou Configuração de ambiente)
-1 Computadas	 	(Label's e/ou comandos)
+
+source_code.asm e o arquivo de entrada
+Caso deseje testar um erro basta tirar o caracter (;) do inicio da linha
+linhas contendo instruÃ§Ãµes ao compilador especifico nao serÃ£o computados
+Compiler.cpp e o arquivo fonte principal
+
+
+
+
+
+
 
 tipo de palavra
 0 Nulas
-1 Configuração de ambiente
-2 instrução reservada
+1 ConfiguraÃ§Ã£o de ambiente
+2 instruÃ§Ã£o reservada
 3 registrador
 4 Literal
 5 Identificador
