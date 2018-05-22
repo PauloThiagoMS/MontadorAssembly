@@ -1,0 +1,16 @@
+tipos de linhas
+0 Nao Computadas		(nulas ou Configuração de ambiente)
+1 Computadas	 	(Label's e/ou comandos)
+
+tipo de palavra
+0 Nulas
+1 Configuração de ambiente
+2 instrução reservada
+3 registrador
+4 Literal
+5 Identificador
+6 separador de operadores
+7 Declarador de label
+8 Label
+
+

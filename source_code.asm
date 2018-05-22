@@ -1,3 +1,54 @@
+;;;;;;Erros Possiveis;;;;;;;;;
+
+;Declaração de Label sem (:)
+;Inicio
+
+;Declaração de Label com literal
+;H'0'
+
+;Declaração de Label com instrução reservada
+;org
+
+;Declaração de Label com registrador reservado
+;ADCON1:
+
+
+;Declaração de Label com identificador nulo
+; :
+
+;Declaração de Label previamente declarado
+;inicio:
+;inicio:
+
+
+;Declaração de registrador incorreta
+;	RegistradorA
+
+;Instrução, que nao requer operador, com operador
+;	retfie w
+
+;Instrução, que requer 1 operador, sem operador
+;	goto
+
+;Instrução, que requer 1 operador, com 2 operadores
+;	goto a,b
+
+;Instrução com operador incorreto
+;	goto H'0'
+
+;Instrução, que requer 2 operadores, com 1 operador
+;	btfsc W
+;	btfsc W,
+
+;Instrução, que requer 2 operadores do tipo registrador, com 1 operador incorreto
+;	ANDWF	0x9 , w
+
+;Instrução, que requer 2 operadores do tipo registrador, com 2 operador incorreto
+;	ANDWF	w , 0x9
+
+;Instrução, que requer 2 operadores, (registrador,(literal | registrador), com 2 operador incorreto
+;	btfsc W,a
+
 ;ConfiguraÃ§Ãµes do ambiente do compilador
 list p=16f819
 	#include <p16f819.inc>
@@ -6,16 +57,15 @@ list p=16f819
 	__config _INTRC_IO & _WDT_OFF & _PWRTE_ON & _MCLR_OFF & _BODEN_OFF & _LVP_OFF & _CPD_OFF & _WRT_OFF  & _DEBUG_OFF & _CCP1_RB2 & _CP_OFF
 
 ;;;;;;;Inicio do codigo fonte;;;;;; 
-; BotÃ£o
-	#define		Button	PORTA,RA0
-	
 ;Reset
- org  H'0000'
+ org  H'0'
  goto inicio
 
 ;InterrupÃ§Ãµes
  org	H'0004'
  retfie
+
+
 
 inicio:
   
@@ -47,14 +97,14 @@ inicio:
 	call 		Print0      ;Chama subrotina de impresÃ£o
 
 Loop:
-	btfsc		Button      ;Verifica acionamento do botÃ£o
+	btfsc		PORTA,RA0      ;Verifica acionamento do botÃ£o
 	call 		incremento  ;Chama subrotina de incremento
 	goto		Loop        ;Volta ao Loop
 	
 
 ;subrotina de soma
 incremento:
-	btfsc		Button        ;Verifica acionamento do botÃ£o
+	btfsc		PORTA,RA0        ;Verifica acionamento do botÃ£o
 	goto 		incremento        ;Aguarda o fim do acionamento
 	call		Print        ;chama subrotina de impresao
 	incf		Cont        ;Incremento do contador
@@ -173,6 +223,13 @@ Print10:
 	movwf		Cont        ;Voltando ao valor inicial
 	call 		Print0      ;chama subrotina de impresao
 	return                      ;Retorno do chamado
+	
 
-;Fim	
+ ;Fim	
 	end                         ;Fim da execuÃ§Ã£o
+
+	
+	
+
+
+
